@@ -1,0 +1,85 @@
+<!doctype html>
+<html dir="ltr" lang="en-US">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta http-equiv="Content-Type"    content="text/html;charset=UTF-8"/>
+  <meta name="viewport"              content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <style type="text/css" media="all">
+    html{ 
+      background: none lightblue;
+    }
+div{
+height:100px;
+width:300px;
+border:1px solid black;
+  white-space: pre;
+  font-family: monospace;
+  overflow: scroll;
+  word-break: break-all;
+}
+  </style>
+</head>
+<body>
+<div></div>
+<input type="file" id="input"/>
+<script type="application/javascript">
+(function(human_readable_bytes_size, input_element, div_element, files, file, file_reader, arr){
+  "use strict";
+ 
+  FileList.prototype.forEach = Array.prototype.forEach;
+
+  input_element.onchange = function(ev){
+    ("function" === typeof ev.preventDefault)  && ev.preventDefault();
+    ("function" === typeof ev.stopPropagation) && ev.stopPropagation();
+
+    input_element.files.forEach(function(file, index){
+
+      file_reader = new FileReader();
+      arr = [];
+      var c;
+
+      file_reader.onload = function(ev){
+        file_reader.result.split('').forEach(function(character, index){
+          c = character.charCodeAt(0) - (index % 256);
+          if(c < 0){
+            c += 256;
+          }
+          arr.push( String.fromCharCode(c) )
+        });
+        
+        console.log(arr.join(''));
+      };
+
+
+      //file_reader.readAsArrayBuffer(file);
+      //file_reader.readAsText(file);
+      file_reader.readAsBinaryString(file);
+    });
+    
+  };
+}(
+function human_readable_bytes_size(bytes, decimals, sap) {
+  decimals = "number" === typeof decimals ? decimals : 2;
+  sap = "string" === typeof sap ? sap : "";
+
+  var 
+    size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  , factor = Math.floor(  (String(bytes).length - 1) / 3  )
+  ;
+  
+  bytes = bytes / Math.pow(1024, factor);  //calc
+  bytes = Math.floor(bytes * Math.pow(10, decimals)) / Math.pow(10, decimals);  //round digits
+  
+   
+  return String(bytes) + sap + size[factor];
+}
+, document.querySelector('input')
+, document.querySelector('div')
+, null
+, null
+, null
+, null
+));
+</script>
+</body>
+</html>
